@@ -22,7 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/books', function () {
     $authors = Author::all();
-    $books = Book::with('author')->get();
+    $books = Book::with('authors')->get();
 
     return view('books', compact('authors', 'books'));
 });
+

@@ -7,11 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    protected $fillable = ['title', 'description', 'author_id', 'publish_date'];
+    protected $fillable = ['title', 'description', 'publish_date', 'author_id', 'image'];
 
-    public function author()
+    public function authors()
     {
-        return $this->belongsTo(Author::class);
+        return $this->belongsToMany(Author::class);
     }
+
+    public function saveImage($image)
+    {
+        $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+        $path = 'images/books/';
+        $image->storeAs($path, $filename, 'public');
+
+        $this->update(['image' => $filename]);
+    }
+
     use HasFactory;
+
+
+
 }
+

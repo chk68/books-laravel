@@ -35,28 +35,51 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>Image</th>
             <th>Title</th>
             <th>Description</th>
-            <th>Author</th>
+            <th>Authors</th>
             <th>Publish Date</th>
         </tr>
+
         </thead>
+
+
         <tbody>
+
         @foreach ($books as $book)
             <tr>
                 <td>{{ $book->id }}</td>
-                <td>{{ $book->title }}</td>
-                <td>{{ $book->description }}</td>
-                <td>{{ $book->author->first_name }} {{ $book->author->last_name }}</td>
+                <td>
+                    <div style="width: 50px; margin-right: 10px;">
+                        <img src="{{ asset('storage/images/books/' . $book->image) }}" alt="{{ $book->title }}"
+                             style="width: 100%; height: auto;">
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center;">
+                        <div>
+                            <h4 style="margin: 0;">{{ $book->title }}</h4>
+                        </div>
+                    </div>
+                </td>
+                <td><p>{{ $book->description }}</p></td>
+                <td>
+                    @foreach ($book->authors as $author)
+                        {{ $author->first_name }} {{ $author->last_name }}<br>
+                    @endforeach
+                </td>
                 <td>{{ $book->publish_date }}</td>
             </tr>
         @endforeach
+
         </tbody>
     </table>
 
     <h2>Add New Author</h2>
 
     <form method="post" action="{{ route('authors.store') }}">
+
         @csrf
         <label for="last_name">Last Name:</label>
         <input type="text" name="last_name" required>
@@ -73,7 +96,7 @@
 
     <h2>Add New Book</h2>
 
-    <form method="post" action="{{ route('books.store') }}">
+    <form method="post" action="{{ route('books.store') }}" enctype="multipart/form-data">
         @csrf
         <label for="title">Title:</label>
         <input type="text" name="title" required>
@@ -81,17 +104,23 @@
         <label for="description">Description:</label>
         <textarea name="description"></textarea>
 
-        <label for="author_id">Author:</label>
-        <select name="author_id" required>
+        <label for="authors">Authors:</label>
+        <select name="authors[]" multiple required>
+
             @foreach ($authors as $author)
                 <option value="{{ $author->id }}">{{ $author->first_name }} {{ $author->last_name }}</option>
             @endforeach
+
         </select>
 
         <label for="publish_date">Publish Date:</label>
         <input type="date" name="publish_date" required>
 
+        <label for="image">Image:</label>
+        <input type="file" name="image" accept="image/*" required>
+
         <button type="submit">Add Book</button>
+
     </form>
 
 </div>

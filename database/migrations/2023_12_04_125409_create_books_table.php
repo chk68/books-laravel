@@ -12,10 +12,12 @@ class CreateBooksTable extends Migration
             $table->id();
             $table->string('title', 255)->nullable(false);
             $table->text('description')->nullable();
-            $table->foreignId('author_id')->constrained('authors');
+            $table->foreignId('author_id')->nullable()->constrained('authors');
             $table->date('publish_date');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
+
     }
 
     public function down()
